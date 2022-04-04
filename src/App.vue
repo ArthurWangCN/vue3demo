@@ -1,21 +1,56 @@
-<script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + Vite" />
+<p>{{person.name}}</p>
+<p class="count">{{count}}</p>
+<button @click="add">add</button>
+<button @click="changeName">change name</button>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<script>
+import { ref, reactive, computed, watchEffect } from 'vue';
+import {Count} from '@/utils/index.js'
+export default {
+  setup() {
+    const {count ,add} = Count();
+
+    // 生成计算属性doubleCount
+    const doubleCount = computed(() => count.value * 2);
+    let color = ref('red');
+
+    const person = reactive({
+      name: 'aa',
+      age: 18
+    })
+
+    // function changeName() {
+    //   person.name = "xxx"
+    // }
+
+    const watchEffectStop = watchEffect(() => {
+      if (count.value % 2) {
+        color.value = 'red';
+      } else {
+        color.value = 'blue';
+      }
+    });
+
+    return {
+      count,
+      color,
+      person,
+      doubleCount,
+      add
+    }
+  },
+  methods: {
+    changeName() {
+      this.person.name = "xxx"
+    }
+  }
+}
+</script>
+
+<style scoped>
+.count{
+    color: v-bind(color)
 }
 </style>
